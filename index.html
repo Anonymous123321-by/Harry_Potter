@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hangman – Wizarding World</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">⚡ Hangman</span>
+    </div>
+    <div class="header-center">
+      <div class="level-badge">Level <span id="current-level">1</span></div>
+      <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar"></div></div>
+    </div>
+    <div class="header-right">
+      <span class="coin-display">🪙 <span id="coin-count">0</span></span>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="game-layout">
+
+    <!-- Left: Keyboard + Guess -->
+    <aside class="left-panel">
+      <div class="panel-card">
+        <h3 class="panel-title">Keyboard</h3>
+        <div class="keyboard" id="keyboard"></div>
+        <div class="guess-section">
+          <h3 class="panel-title" style="margin-top:1.5rem">Guess the word</h3>
+          <div class="guess-input-row">
+            <input type="text" id="guess-input" placeholder="Type full word..." maxlength="40"/>
+            <button id="guess-btn">→</button>
+          </div>
+          <div id="guess-feedback" class="guess-feedback"></div>
+        </div>
+      </div>
+
+      <!-- Unlockable: Add Word -->
+      <div class="panel-card unlock-card" id="add-word-panel" style="display:none">
+        <h3 class="panel-title">📖 Add a Word <span class="unlock-badge">Lv.25</span></h3>
+        <div class="guess-input-row">
+          <input type="text" id="new-word-input" placeholder="New HP word..."/>
+          <button id="add-word-btn">+</button>
+        </div>
+        <div id="add-word-feedback" class="guess-feedback"></div>
+      </div>
+
+      <!-- Unlockable: Shop -->
+      <div class="panel-card unlock-card" id="shop-panel" style="display:none">
+        <h3 class="panel-title">🎩 Hat Shop <span class="unlock-badge">Lv.45</span></h3>
+        <div class="shop-grid" id="shop-grid"></div>
+      </div>
+    </aside>
+
+    <!-- Center: Game -->
+    <main class="center-panel">
+      <div class="panel-card game-card">
+
+        <!-- Character display -->
+        <div class="character-area">
+          <div class="hangman-svg-wrap">
+            <svg id="hangman-svg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+              <!-- Gallows -->
+              <line x1="20" y1="250" x2="180" y2="250" class="gallows"/>
+              <line x1="60" y1="250" x2="60" y2="20"  class="gallows"/>
+              <line x1="60" y1="20"  x2="130" y2="20" class="gallows"/>
+              <line x1="130" y1="20" x2="130" y2="50" class="gallows"/>
+              <!-- Body parts (hidden by default) -->
+              <circle id="h-head" cx="130" cy="68" r="18" class="body-part hidden"/>
+              <line id="h-body" x1="130" y1="86" x2="130" y2="150" class="body-part hidden"/>
+              <line id="h-la"   x1="130" y1="100" x2="105" y2="130" class="body-part hidden"/>
+              <line id="h-ra"   x1="130" y1="100" x2="155" y2="130" class="body-part hidden"/>
+              <line id="h-ll"   x1="130" y1="150" x2="108" y2="185" class="body-part hidden"/>
+              <line id="h-rl"   x1="130" y1="150" x2="152" y2="185" class="body-part hidden"/>
+              <!-- Hat layer (shown by equipping) -->
+              <g id="hat-layer"></g>
+            </svg>
+          </div>
+          <div class="wrong-letters-wrap">
+            <p class="wrong-label">Wrong guesses</p>
+            <div id="wrong-letters" class="wrong-letters"></div>
+          </div>
+        </div>
+
+        <!-- Word display -->
+        <div id="word-display" class="word-display"></div>
+
+        <!-- Hint -->
+        <div class="hint-row">
+          <span class="hint-label">Category:</span>
+          <span id="hint-text" class="hint-text">—</span>
+        </div>
+
+        <!-- Status -->
+        <div id="status-msg" class="status-msg"></div>
+
+        <!-- Next button -->
+        <button id="next-btn" class="next-btn" style="display:none">Next Word ⚡</button>
+      </div>
+    </main>
+
+    <!-- Right: Stats -->
+    <aside class="right-panel">
+      <div class="panel-card">
+        <h3 class="panel-title">Stats</h3>
+        <div class="stat-row"><span>🏆 Wins</span><span id="stat-wins">0</span></div>
+        <div class="stat-row"><span>💀 Losses</span><span id="stat-losses">0</span></div>
+        <div class="stat-row"><span>🔥 Streak</span><span id="stat-streak">0</span></div>
+        <div class="stat-row"><span>🎯 Best Streak</span><span id="stat-best">0</span></div>
+        <div class="stat-row"><span>📊 Difficulty</span><span id="stat-diff">Easy</span></div>
+      </div>
+      <div class="panel-card" style="margin-top:1rem">
+        <h3 class="panel-title">Equipped Hat</h3>
+        <div id="equipped-display" class="equipped-display">None</div>
+      </div>
+      <div class="panel-card" style="margin-top:1rem">
+        <h3 class="panel-title">Unlocks</h3>
+        <div class="unlock-row" id="unlock-25"><span>📖 Add Words</span><span id="ul25">🔒 Lv.25</span></div>
+        <div class="unlock-row" id="unlock-45"><span>🎩 Hat Shop</span><span id="ul45">🔒 Lv.45</span></div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="game.js"></script>
+</body>
+</html>
